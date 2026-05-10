@@ -1,31 +1,77 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SettingController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
- 
+/*
+|--------------------------------------------------------------------------
+| Home
+|--------------------------------------------------------------------------
+*/
 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home');
 
- 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
 
 Route::prefix('admin')->group(function () {
 
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])
+        ->name('admin.dashboard');
 
-    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    // Users
+    Route::get('/users', [AdminController::class, 'users'])
+        ->name('admin.users');
 
-    Route::get('/bets', [AdminController::class, 'bets'])->name('admin.bets');
+    // Bets
+    Route::get('/bets', [AdminController::class, 'bets'])
+        ->name('admin.bets');
 
-    Route::get('/deposits', [AdminController::class, 'deposits'])->name('admin.deposits');
+    // Deposits
+    Route::get('/deposits', [AdminController::class, 'deposits'])
+        ->name('admin.deposits');
 
-    Route::get('/withdrawals', [AdminController::class, 'withdrawals'])->name('admin.withdrawals');
+    // Withdrawals
+    Route::get('/withdrawals', [AdminController::class, 'withdrawals'])
+        ->name('admin.withdrawals');
 
-    Route::get('/rounds', [AdminController::class, 'rounds'])->name('admin.rounds');
+    // Rounds
+    Route::get('/rounds', [AdminController::class, 'rounds'])
+        ->name('admin.rounds');
+
+    /*
+    |--------------------------------------------------------------------------
+    | SETTINGS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/settings', [SettingController::class, 'index'])
+        ->name('admin.settings');
+
+    Route::post('/settings/update', [SettingController::class, 'update'])
+        ->name('admin.settings.update');
+
+    Route::post('/user/update/{id}', [SettingController::class, 'updateUser'])
+        ->name('admin.user.update');
 
 });

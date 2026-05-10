@@ -66,6 +66,9 @@
                     <a class="nav-link" href="{{ route('admin.rounds') }}">
                         <i class="fas fa-sync"></i> Rounds
                     </a>
+                       <a class="nav-link" href="{{ route('admin.settings') }}">
+                        <i class="fas fa-sync"></i> Setting
+                    </a>
 
                 </div>
             </div>
