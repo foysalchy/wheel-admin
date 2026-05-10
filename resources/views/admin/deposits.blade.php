@@ -39,7 +39,7 @@
 
     <td>{{ $deposit->user->username ?? 'N/A' }}</td>
 
-    <td class="text-success fw-bold">৳ {{ $deposit->amount }}</td>
+    <td class="text-success fw-bold">₹ {{ $deposit->amount }}</td>
 
     <td>
         <span class="badge bg-info text-dark">

@@ -59,7 +59,7 @@
 
                         <td>
                             <span class="text-success fw-bold">
-                                ৳ {{ $bet->amount }}
+                                ₹ {{ $bet->amount }}
                             </span>
                         </td>
 

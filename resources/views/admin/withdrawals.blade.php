@@ -40,7 +40,7 @@
 
     <td>{{ $withdraw->user->username ?? 'N/A' }}</td>
 
-    <td class="text-danger fw-bold">৳ {{ $withdraw->amount }}</td>
+    <td class="text-danger fw-bold">₹ {{ $withdraw->amount }}</td>
 
     <td>
         <span class="badge bg-info text-dark">

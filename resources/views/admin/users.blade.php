@@ -50,7 +50,7 @@
 
                         <td>
                             <span class="text-success fw-bold">
-                                ৳ {{ $user->wallet }}
+                                ₹ {{ $user->wallet }}
                             </span>
                         </td>
 

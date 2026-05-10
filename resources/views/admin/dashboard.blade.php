@@ -26,7 +26,7 @@
             <div class="card bg-success text-white shadow h-100">
                 <div class="card-body">
                     <h6>Total Deposit</h6>
-                    <h2>৳ {{ $totalDeposit }}</h2>
+                    <h2>₹ {{ $totalDeposit }}</h2>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="card bg-danger text-white shadow h-100">
                 <div class="card-body">
                     <h6>Total Withdraw</h6>
-                    <h2>৳ {{ $totalWithdraw }}</h2>
+                    <h2>₹ {{ $totalWithdraw }}</h2>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <div class="card bg-warning text-dark shadow h-100">
                 <div class="card-body">
                     <h6>Profit</h6>
-                    <h2>৳ {{ $profit }}</h2>
+                    <h2>₹ {{ $profit }}</h2>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         <tr>
                             <td>{{ $bet->user->username ?? '' }}</td>
                             <td>{{ $bet->number }}</td>
-                            <td>৳ {{ $bet->amount }}</td>
+                            <td>₹ {{ $bet->amount }}</td>
                         </tr>
                         @endforeach
                     </table>
@@ -93,7 +93,7 @@
                         <tr>
                             <td>{{ $bet->user->username ?? '' }}</td>
                             <td>{{ $bet->number }}</td>
-                            <td>৳ {{ $bet->amount }}</td>
+                            <td>₹ {{ $bet->amount }}</td>
                         </tr>
                         @endforeach
                     </table>
@@ -119,7 +119,7 @@
                         @foreach($lastDeposits as $d)
                         <tr>
                             <td>{{ $d->user->username ?? '' }}</td>
-                            <td>৳ {{ $d->amount }}</td>
+                            <td>₹ {{ $d->amount }}</td>
                             <td>{{ $d->created_at }}</td>
                         </tr>
                         @endforeach
@@ -141,7 +141,7 @@
                         @foreach($lastWithdrawals as $w)
                         <tr>
                             <td>{{ $w->user->username ?? '' }}</td>
-                            <td>৳ {{ $w->amount }}</td>
+                            <td>₹ {{ $w->amount }}</td>
                             <td>{{ $w->created_at }}</td>
                         </tr>
                         @endforeach
