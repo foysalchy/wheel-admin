@@ -70,7 +70,17 @@
                 @csrf
                 <button class="btn btn-success btn-sm">Approve</button>
             </form>
+            <form method="POST"
+      action="{{ url('/admin/deposits/'.$deposit->id.'/reject') }}"
+      class="d-inline">
+    @csrf
+
+    <button class="btn btn-danger btn-sm">
+        Reject
+    </button>
+</form>
         @endif
+        
     </td>
 
 </tr>

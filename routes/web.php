@@ -50,10 +50,20 @@ Route::prefix('admin')->group(function () {
     // Deposits
     Route::get('/deposits', [AdminController::class, 'deposits'])
         ->name('admin.deposits');
+    Route::post('/deposits/{id}/approve',
+        [AdminController::class, 'approveDeposit']);
+
+    Route::post('/deposits/{id}/reject',
+        [AdminController::class, 'rejectDeposit']);
 
     // Withdrawals
     Route::get('/withdrawals', [AdminController::class, 'withdrawals'])
         ->name('admin.withdrawals');
+    Route::post('/withdrawals/{id}/approve',
+        [AdminController::class, 'approveWithdrawal']);
+
+    Route::post('/withdrawals/{id}/reject',
+        [AdminController::class, 'rejectWithdrawal']);
 
     // Rounds
     Route::get('/rounds', [AdminController::class, 'rounds'])

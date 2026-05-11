@@ -111,4 +111,68 @@ class AdminController extends Controller
 
         return view('admin.rounds', compact('rounds'));
     }
+    public function approveDeposit($id)
+{
+    $deposit = Deposit::findOrFail($id);
+
+    // already approved stop
+    if ($deposit->status == 'approved') {
+        return back()->with('error', 'Already approved');
+    }
+
+    $user = User::find($deposit->user_id);
+
+    // add balance
+    $user->wallet += $deposit->amount;
+    $user->save();
+
+    // update status
+    $deposit->status = 'approved';
+    $deposit->save();
+
+    return back()->with('success', 'Deposit approved successfully');
+}
+public function rejectDeposit($id)
+{
+    $deposit = Deposit::findOrFail($id);
+
+    $deposit->status = 'rejected';
+    $deposit->save();
+
+    return back()->with('success', 'Deposit rejected');
+}
+public function approveWithdrawal($id)
+{
+    $withdraw = Withdrawal::findOrFail($id);
+
+    if ($withdraw->status == 'approved') {
+        return back()->with('error', 'Already approved');
+    }
+
+    $user = User::find($withdraw->user_id);
+
+    // check balance
+    if ($user->wallet < $withdraw->amount) {
+        return back()->with('error', 'Insufficient balance');
+    }
+
+    // deduct wallet
+    $user->wallet -= $withdraw->amount;
+    $user->save();
+
+    // approve
+    $withdraw->status = 'approved';
+    $withdraw->save();
+
+    return back()->with('success', 'Withdrawal approved');
+}
+public function rejectWithdrawal($id)
+{
+    $withdraw = Withdrawal::findOrFail($id);
+
+    $withdraw->status = 'rejected';
+    $withdraw->save();
+
+    return back()->with('success', 'Withdrawal rejected');
+}
 }
