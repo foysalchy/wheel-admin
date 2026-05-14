@@ -11,6 +11,8 @@ class Setting extends Model
     protected $fillable = [
         'site_name',
         'admin_name',
-        'admin_email'
+        'admin_email',
+        'win_rate',
+        'win_per'
     ];
 }

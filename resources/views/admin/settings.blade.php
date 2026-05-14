@@ -51,6 +51,21 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="mb-2">
+                            <label>Percentage Mode</label>
+                            <input type="text" name="win_per"
+                                   class="form-control"
+                                   value="{{ $settings->win_per ?? '' }}">
+                        </div>
+                         <div class="mb-2">
+                            <label>Win Amount X  </label>
+                            <input type="text" name="win_rate"
+                                   class="form-control"
+                                   value="{{ $settings->win_rate ?? '' }}">
+                        </div>
+
+
+
 
                         <button class="btn btn-primary mt-2">
                             Save Settings

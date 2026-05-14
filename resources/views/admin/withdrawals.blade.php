@@ -7,7 +7,70 @@
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item active">Withdrawal Requests</li>
 </ol>
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+        <form method="GET">
+            <div class="row align-items-end">
 
+                <div class="col-md-4">
+                    <label>From</label>
+                    <input type="date" name="from" class="form-control" value="{{ request('from') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <label>To</label>
+                    <input type="date" name="to" class="form-control" value="{{ request('to') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100">
+                        Filter
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Total Withdraw</small>
+                <h4 class="text-danger">₹ {{ number_format($totalWithdraw,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Pending</small>
+                <h4 class="text-warning">₹ {{ number_format($pendingWithdraw,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Approved</small>
+                <h4 class="text-success">₹ {{ number_format($approvedWithdraw,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Rejected</small>
+                <h4 class="text-secondary">₹ {{ number_format($rejectedWithdraw,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+</div>
 <div class="card mb-4">
 
     <div class="card-header">

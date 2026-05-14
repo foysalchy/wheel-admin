@@ -35,6 +35,8 @@ class SettingController extends Controller
         $settings->site_name = $request->site_name;
         $settings->game_win_mode = $request->game_win_mode;
         $settings->game_time_mode = $request->game_time_mode;
+        $settings->win_per = $request->win_per;
+        $settings->win_rate = $request->win_rate;
 
         $settings->save();
 

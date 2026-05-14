@@ -13,7 +13,10 @@ class User extends Authenticatable
         'wallet',
         'email',
         'phone',
-        'photo'
+        'photo',
+        'status',
+        'is_promoter',
+        'is_vip',
     ];
 
     protected $hidden = [

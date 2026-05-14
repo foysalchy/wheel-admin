@@ -3,10 +3,76 @@
 @section('content')
 
 <h1 class="mt-4">All Bets</h1>
-
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item active">Bet History</li>
 </ol>
+
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+
+        <form method="GET">
+            <div class="row align-items-end">
+
+                <div class="col-md-4">
+                    <label>From Date</label>
+                    <input type="date" name="from" class="form-control" value="{{ request('from') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <label>To Date</label>
+                    <input type="date" name="to" class="form-control" value="{{ request('to') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100">
+                        Filter Bets
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Total Bet</small>
+                <h4 class="text-primary">₹ {{ number_format($totalBet,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Total Win</small>
+                <h4 class="text-success">₹ {{ number_format($totalWin,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Total Loss</small>
+                <h4 class="text-danger">₹ {{ number_format($totalLoss,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small>Total Cancel</small>
+                <h4 class="text-secondary">₹ {{ number_format($totalCancel,2) }}</h4>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 <div class="card mb-4">
     <div class="card-header">

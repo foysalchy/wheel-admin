@@ -9,6 +9,7 @@ use App\Models\Withdrawal;
 use App\Models\Round;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {public function dashboard()
@@ -52,19 +53,63 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
-    public function bets()
-    {
-        $bets = Bet::with('user')->latest()->get();
+    public function bets(Request $request)
+{
+    $query = Bet::with('user')->latest();
 
-        return view('admin.bets', compact('bets'));
+    // DATE FILTER
+    if ($request->from && $request->to) {
+        $query->whereBetween('created_at', [
+            $request->from . ' 00:00:00',
+            $request->to . ' 23:59:59'
+        ]);
     }
 
-    public function deposits()
-    {
-        $deposits = Deposit::with('user')->latest()->get();
+    $bets = $query->get();
 
-        return view('admin.deposits', compact('deposits'));
+    // STATISTICS
+    $totalBet = Bet::sum('amount');
+    $totalWin = Bet::where('status', 1)->sum('amount');
+    $totalLoss = Bet::where('status', 2)->sum('amount');
+    $totalCancel = Bet::where('status', 3)->sum('amount');
+
+    return view('admin.bets', compact(
+        'bets',
+        'totalBet',
+        'totalWin',
+        'totalLoss',
+        'totalCancel'
+    ));
+}
+
+   public function deposits(Request $request)
+{
+    $query = Deposit::with('user');
+
+    // DATE FILTER
+    if ($request->from && $request->to) {
+        $query->whereBetween('created_at', [$request->from, $request->to]);
     }
+
+    $deposits = $query->latest()->get();
+
+    // STATS (ALL DATA - NOT FILTERED OR YOU CAN CHANGE)
+    $totalDeposit = Deposit::where('status', 'approved')->sum('amount');
+
+    $pendingDeposit = Deposit::where('status', 'pending')->sum('amount');
+
+    $approvedCount = Deposit::where('status', 'approved')->sum('amount');
+
+    $rejectedCount = Deposit::where('status', 'rejected')->sum('amount');
+
+    return view('admin.deposits', compact(
+        'deposits',
+        'totalDeposit',
+        'pendingDeposit',
+        'approvedCount',
+        'rejectedCount'
+    ));
+}
 
     public function approveDeposit($id)
     {
@@ -88,12 +133,34 @@ class AdminController extends Controller
         return back()->with('success', 'Deposit Approved');
     }
 
-    public function withdrawals()
-    {
-        $withdrawals = Withdrawal::with('user')->latest()->get();
+ public function withdrawals(Request $request)
+{
+    $query = Withdrawal::with('user')->latest();
 
-        return view('admin.withdrawals', compact('withdrawals'));
+    // DATE FILTER
+    if ($request->from && $request->to) {
+        $query->whereBetween('created_at', [
+            $request->from . ' 00:00:00',
+            $request->to . ' 23:59:59'
+        ]);
     }
+
+    $withdrawals = $query->get();
+
+    // STATISTICS
+    $totalWithdraw = Withdrawal::sum('amount');
+    $pendingWithdraw = Withdrawal::where('status', 'pending')->sum('amount');
+    $approvedWithdraw = Withdrawal::where('status', 'approved')->sum('amount');
+    $rejectedWithdraw = Withdrawal::where('status', 'rejected')->sum('amount');
+
+    return view('admin.withdrawals', compact(
+        'withdrawals',
+        'totalWithdraw',
+        'pendingWithdraw',
+        'approvedWithdraw',
+        'rejectedWithdraw'
+    ));
+}
 
     public function approveWithdrawal($id)
     {
@@ -128,5 +195,132 @@ public function rejectDeposit($id)
     $deposit->save();
 
     return back()->with('success', 'Deposit rejected');
+}
+/*
+    |--------------------------------------------------------------------------
+    | CREATE USER
+    |--------------------------------------------------------------------------
+    */
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'wallet' => 'required|numeric',
+            'password' => 'required|min:6',
+        ]);
+
+        User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'wallet' => $request->wallet,
+            'password' => Hash::make($request->password),
+            'password_txt' => $request->password,
+            'is_promoter' => $request->promoter,
+            'is_vip' => $request->vip,
+           'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'User Created Successfully');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE USER
+    |--------------------------------------------------------------------------
+    */
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'username' => 'required|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'wallet' => 'required|numeric',
+        ]);
+
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->wallet = $request->wallet;
+        $user->is_promoter = $request->promoter;
+        $user->is_vip = $request->vip;
+        $user->status = $request->status;
+        
+
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+            $user->password_txt=$request->password;
+        }
+
+        $user->save();
+
+        return back()->with('success', 'User Updated Successfully');
+    }
+    public function deleteUser($id)
+{
+    $user = User::findOrFail($id);
+
+    $user->delete();
+
+    return back()->with('success', 'User Deleted Successfully');
+}
+public function profile(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    $from = $request->from;
+    $to = $request->to;
+
+    $deposits = Deposit::where('user_id', $id);
+
+    $withdrawals = Withdrawal::where('user_id', $id);
+
+    $bets = Bet::where('user_id', $id);
+
+    // DATE FILTER
+    if ($from && $to) {
+
+        $deposits->whereBetween('created_at', [$from, $to]);
+
+        $withdrawals->whereBetween('created_at', [$from, $to]);
+
+        $bets->whereBetween('created_at', [$from, $to]);
+    }
+
+    $deposits = $deposits->latest()->get();
+    $withdrawals = $withdrawals->latest()->get();
+    $bets = $bets->latest()->get();
+
+    $totalDeposit = $deposits->sum('amount');
+$totalWithdraw = $withdrawals->sum('amount');
+$totalBet = $bets->sum('amount');
+
+return view('admin.profile', compact(
+    'user',
+    'deposits',
+    'withdrawals',
+    'bets',
+    'from',
+    'to',
+    'totalDeposit',
+    'totalWithdraw',
+    'totalBet'
+));
+}
+public function markBetsPaid(Request $request)
+{
+    $request->validate([
+        'from' => 'required|date',
+        'to' => 'required|date',
+    ]);
+
+    Bet::whereBetween('created_at', [$request->from, $request->to])
+        ->update([
+            'is_paid' => 1
+        ]);
+
+    return back()->with('success', 'Selected date bets marked as PAID');
 }
 }

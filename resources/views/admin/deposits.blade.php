@@ -7,7 +7,80 @@
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item active">Deposit Requests</li>
 </ol>
+<div class="row mb-4">
 
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <small>Total Approved Deposit</small>
+                <h4 class="text-success">
+                    ₹ {{ number_format($totalDeposit,2) }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <small>Pending Deposit</small>
+                <h4 class="text-warning">
+                   ₹ {{ $deposits->where('status','pending')->sum('amount'); }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <small>Approved  </small>
+                <h4 class="text-success">
+                    ₹ {{ $approvedCount }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <small>Rejected  </small>
+                <h4 class="text-danger">
+                    ₹ {{ $rejectedCount }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card mb-4">
+    <div class="card-body">
+
+        <form method="GET">
+            <div class="row align-items-end">
+
+                <div class="col-md-4">
+                    <label>From</label>
+                    <input type="date" name="from" class="form-control" value="{{ request('from') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <label>To</label>
+                    <input type="date" name="to" class="form-control" value="{{ request('to') }}">
+                </div>
+
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100">
+                        Filter
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-money-bill-wave me-1"></i>

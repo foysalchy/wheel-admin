@@ -34,7 +34,26 @@ Route::get('/home', [AdminController::class, 'dashboard'])
 */
 
 Route::prefix('admin')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| USERS
+|--------------------------------------------------------------------------
+*/
+Route::post('/admin/bets/pay', [AdminController::class, 'markBetsPaid'])
+    ->name('admin.bets.pay');
+Route::get('/users/profile/{id}', [AdminController::class, 'profile'])
+    ->name('admin.users.profile');
+Route::post('/users/delete/{id}', [AdminController::class, 'deleteUser'])
+    ->name('admin.users.delete');
 
+Route::get('/users', [AdminController::class, 'users'])
+    ->name('admin.users');
+
+Route::post('/users/store', [AdminController::class, 'storeUser'])
+    ->name('admin.users.store');
+
+Route::post('/users/update/{id}', [AdminController::class, 'updateUser'])
+    ->name('admin.users.update');
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
