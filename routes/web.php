@@ -49,6 +49,9 @@ Route::post('/users/delete/{id}', [AdminController::class, 'deleteUser'])
 Route::get('/users', [AdminController::class, 'users'])
     ->name('admin.users');
 
+ 
+Route::get('/win/round/{number}/{roundId}', [AdminController::class, 'resultRoundSet']);
+  
 Route::post('/users/store', [AdminController::class, 'storeUser'])
     ->name('admin.users.store');
 

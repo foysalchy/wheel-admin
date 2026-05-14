@@ -175,8 +175,9 @@ class AdminController extends Controller
     public function rounds()
     {
         $rounds = Round::latest()->get();
+        $roundf = Round::latest()->first();
 
-        return view('admin.rounds', compact('rounds'));
+        return view('admin.rounds', compact('rounds','roundf'));
     }
     public function rejectWithdrawal($id)
 {
@@ -186,6 +187,12 @@ class AdminController extends Controller
     $withdraw->save();
 
     return back()->with('success', 'Withdrawal rejected');
+}
+public function resultRoundSet($number,$id){
+       $roundf = Round::where('roundid',$id)->first();
+       $roundf->result  =$number;
+       $roundf->update();
+        return back();
 }
 public function rejectDeposit($id)
 {
