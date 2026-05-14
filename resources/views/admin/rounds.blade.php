@@ -13,7 +13,17 @@
         <i class="fas fa-dice me-1"></i>
         Round History
     </div>
+<h3>Running Round: <span id="roundId"></span></h3>
 
+<table class="table">
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>Total Bet</th>
+    </tr>
+  </thead>
+  <tbody id="betTable"></tbody>
+</table>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="datatablesSimple">
@@ -59,5 +69,29 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:5000");
 
+  socket.on("connect", () => {
+    console.log("connected");
+  });
+
+  socket.on("sync_state", (data) => {
+    document.getElementById("roundId").innerText = data.roundId;
+  });
+
+  socket.on("bet_summary", (data) => {
+    let html = "";
+
+    data.forEach(item => {
+      html += `<tr>
+        <td>${item.number}</td>
+        <td>${item.total}</td>
+      </tr>`;
+    });
+
+    document.getElementById("betTable").innerHTML = html;
+  });
+</script>
 @endsection
