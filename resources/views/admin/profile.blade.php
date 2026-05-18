@@ -687,7 +687,7 @@
                                     Pending
                                 </span>
  
-                            @else if($bet->is_paid == 0)
+                            @elseif($bet->is_paid == 0)
 
                                 <span class="badge bg-secondary">
                                     UnPaid
