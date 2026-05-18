@@ -149,9 +149,46 @@
                 </tbody>
 
             </table>
-<div class="d-flex justify-content-end mt-3">
-    {{ $bets->appends(request()->query())->links() }}
+<div class="d-flex justify-content-between align-items-center mt-4 p-3 bg-white rounded shadow-sm">
+
+    <div class="text-muted small">
+        Showing {{ $bets->firstItem() }} to {{ $bets->lastItem() }} of {{ $bets->total() }} results
+    </div>
+
+    <div class="pagination-wrapper">
+        {{ $bets->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
+
 </div>
+<style>
+    .pagination {
+    margin: 0;
+    gap: 5px;
+}
+
+.pagination .page-link {
+    border-radius: 6px !important;
+    border: 1px solid #e5e7eb;
+    color: #333;
+    padding: 6px 12px;
+    transition: 0.2s;
+}
+
+.pagination .page-link:hover {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.pagination .page-item.active .page-link {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+.datatable-pagination{
+    display:none
+}
+</style>
         </div>
 
     </div>
