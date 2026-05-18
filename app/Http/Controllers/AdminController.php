@@ -189,6 +189,11 @@ class AdminController extends Controller
     $withdraw->status = 'rejected';
     $withdraw->save();
 
+     $user = User::find($withdraw->user_id);
+
+            $user->wallet += $withdraw->amount;
+            $user->save();
+
     return back()->with('success', 'Withdrawal rejected');
 }
 public function resultRoundSet($number,$id){
