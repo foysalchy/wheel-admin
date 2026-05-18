@@ -283,41 +283,78 @@ public function profile(Request $request, $id)
     $from = $request->from;
     $to = $request->to;
 
-    $deposits = Deposit::where('user_id', $id);
+    // BASE QUERY FUNCTION (reuse clean logic)
+    $dateFilter = function ($query) use ($from, $to) {
+        if ($from && $to) {
+            $query->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
+        }
+        return $query;
+    };
 
-    $withdrawals = Withdrawal::where('user_id', $id);
+    /*
+    |---------------------------------
+    | DEPOSITS (PAGINATED)
+    |---------------------------------
+    */
+    $depositsQuery = Deposit::where('user_id', $id);
+    $dateFilter($depositsQuery);
 
-    $bets = Bet::where('user_id', $id);
+    $deposits = (clone $depositsQuery)
+        ->latest()
+        ->paginate(10, ['*'], 'deposits_page');
 
-    // DATE FILTER
-    if ($from && $to) {
+    $totalDeposit = (clone $depositsQuery)->sum('amount');
 
-        $deposits->whereBetween('created_at', [$from, $to]);
 
-        $withdrawals->whereBetween('created_at', [$from, $to]);
+    /*
+    |---------------------------------
+    | WITHDRAWALS (PAGINATED)
+    |---------------------------------
+    */
+    $withdrawalsQuery = Withdrawal::where('user_id', $id);
+    $dateFilter($withdrawalsQuery);
 
-        $bets->whereBetween('created_at', [$from, $to]);
-    }
+    $withdrawals = (clone $withdrawalsQuery)
+        ->latest()
+        ->paginate(10, ['*'], 'withdrawals_page');
 
-    $deposits = $deposits->latest()->get();
-    $withdrawals = $withdrawals->latest()->get();
-    $bets = $bets->latest()->get();
+    $totalWithdraw = (clone $withdrawalsQuery)->sum('amount');
 
-    $totalDeposit = $deposits->sum('amount');
-$totalWithdraw = $withdrawals->sum('amount');
-$totalBet = $bets->sum('amount');
 
-return view('admin.profile', compact(
-    'user',
-    'deposits',
-    'withdrawals',
-    'bets',
-    'from',
-    'to',
-    'totalDeposit',
-    'totalWithdraw',
-    'totalBet'
-));
+    /*
+    |---------------------------------
+    | BETS (PAGINATED)
+    |---------------------------------
+    */
+    $betsQuery = Bet::where('user_id', $id);
+    $dateFilter($betsQuery);
+
+    $bets = (clone $betsQuery)
+        ->latest()
+        ->paginate(10, ['*'], 'bets_page');
+
+    $totalBet = (clone $betsQuery)->sum('amount');
+
+
+    /*
+    |---------------------------------
+    | RETURN VIEW
+    |---------------------------------
+    */
+    return view('admin.profile', compact(
+        'user',
+        'deposits',
+        'withdrawals',
+        'bets',
+        'from',
+        'to',
+        'totalDeposit',
+        'totalWithdraw',
+        'totalBet'
+    ));
 }
 public function markBetsPaid(Request $request)
 {

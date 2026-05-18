@@ -474,7 +474,17 @@
                 </tbody>
 
             </table>
+<div class="d-flex justify-content-between align-items-center mt-3 p-3 bg-white rounded shadow-sm">
 
+    <div class="text-muted small">
+        Deposits: Showing {{ $deposits->firstItem() }} to {{ $deposits->lastItem() }} of {{ $deposits->total() }}
+    </div>
+
+    <div class="custom-pagination">
+        {{ $deposits->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
+
+</div>
         </div>
 
     </div>
@@ -597,7 +607,17 @@
                 </tbody>
 
             </table>
+<div class="d-flex justify-content-between align-items-center mt-3 p-3 bg-white rounded shadow-sm">
 
+    <div class="text-muted small">
+        Withdrawals: Showing {{ $withdrawals->firstItem() }} to {{ $withdrawals->lastItem() }} of {{ $withdrawals->total() }}
+    </div>
+
+    <div class="custom-pagination">
+        {{ $withdrawals->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
+
+</div>
         </div>
 
     </div>
@@ -713,7 +733,49 @@
                 </tbody>
 
             </table>
+<div class="d-flex justify-content-between align-items-center mt-3 p-3 bg-white rounded shadow-sm">
 
+    <div class="text-muted small">
+        Bets: Showing {{ $bets->firstItem() }} to {{ $bets->lastItem() }} of {{ $bets->total() }}
+    </div>
+
+    <div class="custom-pagination">
+        {{ $bets->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
+
+</div>
+<style>
+    .custom-pagination .pagination {
+    margin: 0;
+    gap: 6px;
+}
+
+.custom-pagination .page-item .page-link {
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb;
+    color: #444;
+    padding: 6px 12px;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: none;
+}
+
+.custom-pagination .page-item .page-link:hover {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.custom-pagination .page-item.active .page-link {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+}
+</style>
         </div>
 
     </div>
