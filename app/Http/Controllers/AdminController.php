@@ -55,23 +55,27 @@ class AdminController extends Controller
 
     public function bets(Request $request)
 {
-    $query = Bet::with('user')->latest();
+    $baseQuery = Bet::query();
 
-    // DATE FILTER
     if ($request->from && $request->to) {
-        $query->whereBetween('created_at', [
+        $baseQuery->whereBetween('created_at', [
             $request->from . ' 00:00:00',
             $request->to . ' 23:59:59'
         ]);
     }
 
-    $bets = $query->get();
+    // stats
+    $totalBet = (clone $baseQuery)->sum('amount');
+    $totalWin = (clone $baseQuery)->where('status', 1)->sum('amount');
+    $totalLoss = (clone $baseQuery)->where('status', 2)->sum('amount');
+    $totalCancel = (clone $baseQuery)->where('status', 3)->sum('amount');
 
-    // STATISTICS
-    $totalBet = Bet::sum('amount');
-    $totalWin = Bet::where('status', 1)->sum('amount');
-    $totalLoss = Bet::where('status', 2)->sum('amount');
-    $totalCancel = Bet::where('status', 3)->sum('amount');
+    // paginated bets
+    $bets = (clone $baseQuery)
+        ->with('user:id,username')
+        ->select('id','user_id','round_id','number','amount','status','created_at')
+        ->latest()
+        ->paginate(50);
 
     return view('admin.bets', compact(
         'bets',
@@ -81,7 +85,6 @@ class AdminController extends Controller
         'totalCancel'
     ));
 }
-
    public function deposits(Request $request)
 {
     $query = Deposit::with('user');

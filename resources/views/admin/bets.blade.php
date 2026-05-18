@@ -149,7 +149,9 @@
                 </tbody>
 
             </table>
-
+<div class="d-flex justify-content-end mt-3">
+    {{ $bets->appends(request()->query())->links() }}
+</div>
         </div>
 
     </div>
