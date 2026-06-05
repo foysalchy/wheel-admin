@@ -223,20 +223,20 @@ public function rejectDeposit($id)
             'username' => 'required|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'wallet' => 'required|numeric',
-            'password' => 'required|min:6',
+            'password' => 'required|min:3',
         ]);
 
-        User::create([
+        $user=User::create([
             'username' => $request->username,
             'email' => $request->email,
             'wallet' => $request->wallet,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'password_txt' => $request->password,
             'is_promoter' => $request->promoter,
             'is_vip' => $request->vip,
            'status' => $request->status,
         ]);
-
+        
         return back()->with('success', 'User Created Successfully');
     }
 
@@ -265,7 +265,7 @@ public function rejectDeposit($id)
         
 
         if ($request->password) {
-            $user->password = Hash::make($request->password);
+            $user->password = $request->password;
             $user->password_txt=$request->password;
         }
 
